@@ -1,36 +1,37 @@
-function mandel_img = mandel2();
   %% Parameters
-  w = [-2.25 1.25]; % Domain
-  h = [-1.25 1.25]; % Range
-  s = 0.005;      % Step size
-  it = 255;        % Iteration depth
+  %w = [-2.25 1.25]; % Domain
+  %h = [-1.25 1.25]; % Range
+  %s = 0.005;      % Step size
+  %it = 255;        % Iteration depth
+   %% Prepare the complex plane
+  %[wa ha] = meshgrid (w(1):s:w(2), h(1):s:h(2));
+  %complex_plane = wa + ha * i;
+   % z = complex_plane;
+function I = mandel(z,it);
   
-  %% Prepare the complex plane
-  [wa ha] = meshgrid (w(1):s:w(2), h(1):s:h(2));
-  complex_plane = wa + ha * i;
+ 
   
   %% Preallocate image
-  mandel_img = zeros( length(h(1):s:h(2)), length(w(1):s:w(2)));
+  I = zeros( size(z));
+  zi = z;
   
-  %% initialize Z
-  z = complex_plane;
   z(abs(z)>=2) = 0;
-  mandel_img(abs(z)<2) = mandel_img(abs(z)<2)+1;
+  I(abs(z)<2) = I(abs(z)<2)+1;
   for i = 1:it
-    I = (abs(z)<2);
-    z(I) = z(I).^2 + complex_plane (I);
-    mandel_img(I) = mandel_img(I) + 1;
+    indx = (abs(z)<2);
+    z(indx) = z(indx).^2 + zi(indx);
+    I(indx) = I(indx) + 1;
     %% Display progress
-    waitbar (i/it);
+##    waitbar (i/it);
   end
   
   ##   cmap = [hot(63); 0 0 0];  # The colormap
-  ##   imshow(mandel_img+1,cmap);
-  mandel_img = mandel_img-1;
-  mandel_img = mandel_img./max(mandel_img(:));
-  mandel_img = histeq (mandel_img, 256);
-  mandel_img = uint8(mandel_img);
-  imshow(mandel_img);
-  imwrite(mandel_img, "mandel.png",'Quality',100);
+  ##   imshow(I+1,cmap);
+  I = I-1;
+  I = 255*I./max(I(:));
+##  I = histeq (I, 256);
+  I = uint8(I);
+##  imshow(I);
+  
   
 end
